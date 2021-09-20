@@ -10,14 +10,15 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row">
+  <div class="container-fluid">    <div class="row">
       <div class="col-sm-2">
       {% block sidebar %}
         <ul class="sidebar-nav">
 	  <li><a href="{% url 'index' %}">Home</a></li>
 	  <li><a href="{% url 'books' %}">All books</a></li>
-	  <li><a href="{% url 'authors' %}">All authors</a></li>        </ul>
+	  <li><a href="{% url 'authors' %}">All authors</a></li>        
+	  <!--<li><a href="{% url 'books-genre' %}">Genres</a></li> -->        
+	  <li><a href="{% url 'books-by-genre' %}">Books By Genres</a></li>        </ul>
 	{% if user.is_authenticated %}
         <ul class="sidebar-nav">
       <li>User: {{ user.get_username }}</li>
@@ -36,6 +37,7 @@
 	  <li><a href="{% url 'all-borrowed' %}">All Borrowed</a></li>
 	  <li><a href="{% url 'book-create' %}">New Book</a></li>
 	  <li><a href="{% url 'author-create' %}">New Author</a></li>
+	  
 	  {% endif %}
 	</ul>
 	{% endif %}

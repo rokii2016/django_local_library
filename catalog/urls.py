@@ -27,3 +27,15 @@ urlpatterns += [
     path('book/<int:pk>/update/', views.BookUpdate.as_view(), name='book-update'),
     path('book/<int:pk>/delete/', views.BookDelete.as_view(), name='book-delete'),
 ]
+urlpatterns += [
+    path('book',views.BookGenreListView.as_view(),name='books-genre'),
+]
+urlpatterns += [
+    path('book/booksbygenre',views.get_genre,name='books-by-genre'),
+]
+#urlpatterns += [
+#    path('book/listbooksbygenre/<str:genre>',views.BookByGenreListView.as_view(),name='list-books-by-genre'),
+#]
+urlpatterns += [
+    path('book/listbooksbygenre<str:genre>',views.show_books_by_genre,name='list-books-by-genre'),
+]

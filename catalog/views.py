@@ -121,7 +121,7 @@ class AuthorUpdate(UpdateView):
 
 class AuthorDelete(DeleteView):
     model = Author
-    success_url = reverse_lazy('bookss')
+    success_url = reverse_lazy('books')
 
 class BookCreate(CreateView):
     model = Book
@@ -135,3 +135,59 @@ class BookUpdate(UpdateView):
 class BookDelete(DeleteView):
     model = Book
     success_url = reverse_lazy('authors')
+#class BookByGenreListView(generic.ListView):
+#    """Generic class-based view listing books on loan to current user."""
+#    model = Book
+#    template_name ='catalog/list_books_by_genre.html'
+#    paginate_by = 10
+#    #def get_queryset(self):
+#    #    return Book.objects.filter(genre='Bible Study')
+class BookGenreListView(generic.ListView):
+    model = Genre
+    #template_name ='catalog/genre_list.html'
+    paginate_by = 10
+from .forms import GenreForm
+
+from .models import Book
+def show_books_by_genre(request,genre):
+    print("Genre is:: ",genre)
+    print("Num books: ",Book.objects.count())
+    book_list = Book.objects.all()
+    for book in book_list:
+        print(book.title)
+    context={
+        'genre': genre,
+        'book_list' : book_list,
+        }
+    return render(request,'catalog/list_books_by_genre.html',context)
+def get_genre(request):
+    """View function for renewing a specific BookInstance by librarian."""
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = GenreForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            genre = request.POST['choice']
+            print("Genre is ",genre)
+            context ={
+                'genre':genre,
+                'book_list':Book.objects.all(),
+                }
+
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('list-books-by-genre',kwargs={'genre':genre}) )
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = GenreForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'catalog/books_by_genre.html', context)
