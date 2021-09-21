@@ -35,12 +35,12 @@ from django.views import generic
 
 class BookListView(generic.ListView):
     model = Book
-    paginate_by = 10
+    paginate_by = 4
 class BookDetailView(generic.DetailView):
     model = Book    
 class AuthorListView(generic.ListView):
     model = Author
-    paginate_by = 10
+    paginate_by = 4
 class AuthorDetailView(generic.DetailView):
     model = Author    
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -59,7 +59,7 @@ class LoanedBooksListView(PermissionRequiredMixin,generic.ListView):
     """Generic class-based view listing books on loan to current user."""
     model = BookInstance
     template_name ='catalog/bookinstance_list_borrowed.html'
-    paginate_by = 10
+    paginate_by = 4
     permission_required = 'catalog.can_mark_returned'
 
     def get_queryset(self):
@@ -145,13 +145,13 @@ class BookDelete(DeleteView):
 class BookGenreListView(generic.ListView):
     model = Genre
     #template_name ='catalog/genre_list.html'
-    paginate_by = 10
+    paginate_by = 4
 from .forms import GenreForm
 
 from django.core.paginator import Paginator
 def show_books_by_genre(request,genre):
     book_list = Book.objects.filter(genre__name = genre)
-    paginator = Paginator(book_list, 10) # Show 10 bookss per page.
+    paginator = Paginator(book_list, 4) # Show 4 bookss per page.
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
