@@ -148,16 +148,17 @@ class BookGenreListView(generic.ListView):
     paginate_by = 10
 from .forms import GenreForm
 
-from .models import Book
+from django.core.paginator import Paginator
 def show_books_by_genre(request,genre):
-    print("Genre is:: ",genre)
-    print("Num books: ",Book.objects.count())
-    book_list = Book.objects.all()
-    for book in book_list:
-        print(book.title)
+    book_list = Book.objects.filter(genre__name = genre)
+    paginator = Paginator(book_list, 10) # Show 10 bookss per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context={
+        'page_obj': page_obj,
         'genre': genre,
-        'book_list' : book_list,
+        #'book_list' : book_list,
         }
     return render(request,'catalog/list_books_by_genre.html',context)
 def get_genre(request):
