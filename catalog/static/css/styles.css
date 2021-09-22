@@ -4,4 +4,13 @@
     list-style: none;
     
 }
-
+.pagination a:hover{
+    color: red;
+    font-size: 15pt;
+}
+.pagination {
+    font-weight: bold;
+}
+body {
+    background: white url("images/background2.gif") no-repeat;
+}
