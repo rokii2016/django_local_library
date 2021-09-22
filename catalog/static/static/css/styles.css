@@ -1,0 +1,27 @@
+.sidebar-nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+    
+}
+.pagination a:hover{
+    color: red;
+    font-size: 15pt;
+}
+.pagination a{
+    //color: green;
+    font-weight: bold;
+    font-size: 15pt;
+}
+body {
+    background: white url("images/background2.gif") no-repeat;
+}
+li a {
+    font-weight: bold;
+    font-size: 15pt;
+    
+}
+.current {
+    font-weight: bold;
+    font-size: 15pt;
+}
