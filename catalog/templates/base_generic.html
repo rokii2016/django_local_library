@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   {% block title %}<title>Richard Kellam's Library</title>{% endblock %}
-  {% if request.user_agent.is-mobile %}
+  {% if request.user_agent.is_mobile %}
   <h3> Mobile Device </h3>
   {% endif %}
   <meta charset="utf-8">
