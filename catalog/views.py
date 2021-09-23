@@ -222,7 +222,7 @@ def get_book_borrow_id(request):
 
     # If this is a GET (or any other method) create the default form.
     else:
-        form = BookForm()
+        form = BookInstanceForm()
 
     context = {
         'form': form,
