@@ -29,3 +29,10 @@ class GenreForm(forms.Form):
     for a_genre in genres:
         CHOICES.append((a_genre,a_genre))
     choice = forms.ChoiceField(choices=CHOICES)
+class BookForm(forms.Form):
+    
+    books = Book.objects.all()
+    CHOICES =[]
+    for a_book in books:
+        CHOICES.append((a_book.title,a_book.title))
+    choice = forms.ChoiceField(choices=CHOICES)

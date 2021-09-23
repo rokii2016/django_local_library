@@ -192,3 +192,86 @@ def get_genre(request):
     }
 
     return render(request, 'catalog/books_by_genre.html', context)
+from catalog.forms import BookForm
+from django.contrib.auth.models import User
+def get_book_borrow_id(request):
+    """View function for renewing a specific BookInstance by librarian."""
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = BookForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            title = request.POST['choice']
+            print("Book title is ",title)
+            bookinstances = BookInstance.objects.all()
+            for bookinstance in bookinstances:
+                if bookinstance.book.title == title:
+                    pk = bookinstance.id
+            context ={
+                'pk':pk,
+                'book_list':Book.objects.all(),
+                }
+
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('renew-book-librarian',kwargs={'pk':pk}) )
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = BookForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'catalog/books_by_title.html', context)
+def set_book_borrow(request):
+    """View function for renewing a specific BookInstance by librarian."""
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = BookForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            title = request.POST['choice']
+            print("Book title is ",title)
+            bookinstances = BookInstance.objects.all()
+            found = False
+            for bookinstance in bookinstances:
+                if bookinstance.book != None and bookinstance.book.title == title:
+                    found = True
+                    break
+            for book in Book.objects.all():
+                if book.title == title:
+                    break
+            if not found:
+                n_bookinstance = BookInstance.objects.create()
+                n_bookinstance.book = book
+                print(n_bookinstance.borrower)
+                n_bookinstance.borrower = request.user
+                n_bookinstance.status ='o'
+                n_bookinstance.due_back = datetime.date.today() + datetime.timedelta(weeks=3)
+
+                n_bookinstance.save()
+            
+
+            # redirect to a new URL:
+            return render(request,'catalog/book_borrowed.html',{'title':title})
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = BookForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'catalog/books_by_title.html', context)

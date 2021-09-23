@@ -39,3 +39,9 @@ urlpatterns += [
 urlpatterns += [
     path('book/listbooksbygenre<str:genre>',views.show_books_by_genre,name='list-books-by-genre'),
 ]
+urlpatterns += [
+    path('book/books',views.get_book_borrow_id,name='borrow-renew'),
+]
+urlpatterns += [
+    path('book/bookborrow',views.set_book_borrow,name='my-borrow'),
+]
