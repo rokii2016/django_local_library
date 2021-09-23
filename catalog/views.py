@@ -192,7 +192,7 @@ def get_genre(request):
     }
 
     return render(request, 'catalog/books_by_genre.html', context)
-from catalog.forms import BookForm
+from catalog.forms import BookForm,BookInstanceForm
 from django.contrib.auth.models import User
 def get_book_borrow_id(request):
     """View function for renewing a specific BookInstance by librarian."""
@@ -201,7 +201,7 @@ def get_book_borrow_id(request):
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
-        form = BookForm(request.POST)
+        form = BookInstanceForm(request.POST)
 
         # Check if the form is valid:
         if form.is_valid():
