@@ -133,12 +133,14 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/accounts/profile'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.cox.net'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_USER = 'richardkellam'
-EMAIL_PASSWORD = 'Ilv@1119lhnrcx'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.west.cox.net'
+EMAIL_USE_SSL = True
+#MAIL_USe_TTL = True
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'richardkellam'
+EMAIL_HOST_PASSWORD = 'Ilv@1119lhnrcx'
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
