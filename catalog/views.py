@@ -229,6 +229,7 @@ def get_book_borrow_id(request):
     }
 
     return render(request, 'catalog/books_by_title.html', context)
+from django.core.mail import send_mail
 def set_book_borrow(request):
     """View function for renewing a specific BookInstance by librarian."""
 
@@ -253,14 +254,15 @@ def set_book_borrow(request):
                 if book.title == title:
                     break
             if not found:
-                n_bookinstance = BookInstance.objects.create()
-                n_bookinstance.book = book
-                print(n_bookinstance.borrower)
-                n_bookinstance.borrower = request.user
-                n_bookinstance.status ='o'
-                n_bookinstance.due_back = datetime.date.today() + datetime.timedelta(weeks=3)
-
-                n_bookinstance.save()
+                send_mail('Borrow "'+title+'"','I would like to borrow: \n"'+title+'"\n'+request.user.username,request.user.email,['richardkellam@cox.net',],fail_silently = False)
+#                n_bookinstance = BookInstance.objects.create()
+#                n_bookinstance.book = book
+#                print(n_bookinstance.borrower)
+#                n_bookinstance.borrower = request.user
+#                n_bookinstance.status ='o'
+#                n_bookinstance.due_back = datetime.date.today() + datetime.timedelta(weeks=3)
+#
+#                n_bookinstance.save()
             
 
             # redirect to a new URL:
