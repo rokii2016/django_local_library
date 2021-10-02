@@ -45,3 +45,6 @@ urlpatterns += [
 urlpatterns += [
     path('book/bookborrow',views.set_book_borrow,name='my-borrow'),
 ]
+urlpatterns += [
+    path('book/exportbooks',views.do_export_books,name='export-books'),
+]

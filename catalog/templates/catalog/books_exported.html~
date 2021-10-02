@@ -1,0 +1,6 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Exported {{ count }}</h1>
+<p>Email sent</p>
+{% endblock %}

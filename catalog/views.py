@@ -277,3 +277,14 @@ def set_book_borrow(request):
     }
 
     return render(request, 'catalog/books_by_title.html', context)
+def do_export_books(request):
+    exported_books=""
+    count=0;
+    for book in Book.objects.all():
+        exported_books +="\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n"%(book.title,book.author,book.summary,book.isbn,book.language)
+        count +=1
+    fp = open("exported_books.csv","w")
+    fp.write(exported_books)
+    fp.close()
+    return render(request,'catalog/books_exported.html',{'count':count})
+        
