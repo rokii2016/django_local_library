@@ -283,8 +283,6 @@ def do_export_books(request):
     for book in Book.objects.all():
         exported_books +="\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n"%(book.title,book.author,book.summary,book.isbn,book.language)
         count +=1
-    fp = open("exported_books.csv","w")
-    fp.write(exported_books)
-    fp.close()
+    send_mail("Exported %d books"%count,exported_books,'richardkellam@cox.net',['richardkellam@cox.net',],fail_silently=True)    
     return render(request,'catalog/books_exported.html',{'count':count})
         
