@@ -281,8 +281,26 @@ def do_export_books(request):
     exported_books=""
     count=0;
     for book in Book.objects.all():
-        exported_books +="\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n"%(book.title,book.author,book.summary,book.isbn,book.language)
+        exported_books +="\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n"%(book.title,book.author,book.summary,book.display_genre(),book.isbn,book.language)
         count +=1
     send_mail("Exported %d books"%count,exported_books,'richardkellam@cox.net',['richardkellam@cox.net',],fail_silently=True)    
     return render(request,'catalog/books_exported.html',{'count':count})
-        
+def import_books(request):
+    import csv
+    csvfile=open("heroku_exported_books.csv",newline='')
+    csvreader = csv.reader(csvfile,delimiter=',',quotechar='"')
+    for row in csvreader:
+        book= Book()
+        book.title = row[0]
+        author=row[1].split(',')
+        book.author.last_name = author[0]
+        book.author.first_name = author[1]
+        book.summary = row[2]
+        genres=row[3].split(',')
+        for agenre in genres:
+            genre = Genre(name=agenre)
+            genre.save()
+            book.genre.add(genre)
+        book.isbn = row[4]    
+        book.language.name = row[5]
+        book.save()
