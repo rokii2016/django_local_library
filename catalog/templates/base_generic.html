@@ -28,7 +28,6 @@
 
       <li><a href="{% url 'my-borrowed' %}">My Borrowed</a></li>
       <li><a href="{% url 'my-borrow' %}">Borrow Book</a></li>
-      <li><a href="{% url 'export-books' %}">Export Books</a></li>
       
       <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
       {% else %}
@@ -41,6 +40,8 @@
 	{% if perms.catalog.can_mark_returned %}
 	  <li><a href="{% url 'all-borrowed' %}">All Borrowed</a></li>
 	  <li><a href="{% url 'borrow-renew' %}">Renew Book</a></li>
+	  <li><a href="{% url 'export-books' %}">Export Books</a></li>
+	  <li><a href="{% url 'import-books' %}">Import Books</a></li>
 	  
 	  {% endif %}
 	</ul>

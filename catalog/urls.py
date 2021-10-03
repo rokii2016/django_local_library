@@ -48,3 +48,6 @@ urlpatterns += [
 urlpatterns += [
     path('book/exportbooks',views.do_export_books,name='export-books'),
 ]
+urlpatterns += [
+    path('book/importbooks',views.import_books,name='import-books'),
+]
