@@ -68,6 +68,10 @@ class Book(models.Model):
     def display_authors(self):
         """Create a string for the Author. This is required to display author in Admin."""
         return ', '.join(author.first_name+' '+author.last_name for author in self.author.all()[:3])
+    def list_authors(self):
+        """Create a string for the Author. This is required to display author in Admin."""
+        return ';'.join(author.first_name+','+author.last_name for author in self.author.all()[:3])
+
 
     display_authors.short_description = 'Authors'
 import uuid # Required for unique book instances

@@ -281,14 +281,12 @@ def do_export_books(request):
     exported_books=""
     count=0;
     for book in Book.objects.all():
-        exported_books +="\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n"%(book.title,book.display_authors(),book.summary,book.display_genre(),book.isbn,book.language)
+        exported_books +="\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n"%(book.title,book.list_authors(),book.summary,book.display_genre(),book.isbn,book.language)
         count +=1
     send_mail("Exported %d books"%count,exported_books,'richardkellam@cox.net',['richardkellam@cox.net',],fail_silently=True)    
     return render(request,'catalog/books_exported.html',{'count':count})
 from catalog.models import Language
 def import_books(request):
-    for book in Book.objects.all():
-        book.delete()
     import csv
     csvfile=open("exported_books.csv",newline='')
     csvreader = csv.reader(csvfile,delimiter=',',quotechar='"')
@@ -297,45 +295,52 @@ def import_books(request):
         print("row length: ",len(row),"\nrow: ",row)
         if len(row) < 6:
             break
-        book= Book()
-        book.title = row[0]
-        book.save()
-        s_author=row[1].split(',')
-        found=False
-        for author in Author.objects.all():
-            if author.last_name == s_author[0] and author.first_name == s_author[1]:
-                found=True;
-                book.author.add(author)
-        if not found:
-            author=Author(last_name=s_author[0],first_name=s_author[1])
-            author.save()
-            print(author," saved")
-            book.author.add(author)
-        book.summary = row[2]
-        book.save()
-        genres=row[3].split(',')
-        for agenre in genres:
-            found = False
-            for genre in Genre.objects.all():
-                if genre.name == agenre:
-                    book.genre.add(genre)
-                    found = True
-                    break
+        book=Book.objects.filter(title=row[0])
+        if len(book) == 0: #no book with that title
+            book= Book()
+            book.title = row[0]
+            book.save()
+            s_authors=row[1].split(';')
+            print(s_authors)
+            found=False
+            for author in Author.objects.all():
+                for s_author in s_authors:
+                    a_author = s_author.split(',')
+                    if author.first_name == s_author[0] and author.last_name == s_author[1]:
+                        found=True;
+                        book.author.add(author)
             if not found:
-                genre = Genre(name=agenre)
-                genre.save()
-                book.genre.add(genre)
-        book.isbn = row[4]
-        print('isbn: ',row[4],"length: ",len(row[4]),"book.isbn: ",book.isbn)
-        found = False
-        for lang in Language.objects.all():
-            if lang.name == row[5]:
-                book.language = lang
-                found = True
-        if not found:
-            lang = Language(name=row[5])
-            lang.save()
-            book.language =lang
-        book.save()
-        count +=1
+                for s_author in s_authors:
+                    a_author = s_author.split(',')
+                    author=Author(first_name=a_author[0],last_name=a_author[1])
+                    author.save()
+                    print(author," saved")
+                    book.author.add(author)
+            book.summary = row[2]
+            book.save()
+            genres=row[3].split(',')
+            for agenre in genres:
+                found = False
+                for genre in Genre.objects.all():
+                    if genre.name == agenre:
+                        book.genre.add(genre)
+                        found = True
+                        break
+                if not found:
+                    genre = Genre(name=agenre)
+                    genre.save()
+                    book.genre.add(genre)
+            book.isbn = row[4]
+            print('isbn: ',row[4],"length: ",len(row[4]),"book.isbn: ",book.isbn)
+            found = False
+            for lang in Language.objects.all():
+                if lang.name == row[5]:
+                    book.language = lang
+                    found = True
+            if not found:
+                lang = Language(name=row[5])
+                lang.save()
+                book.language =lang
+            book.save()
+            count +=1
     return render(request,'catalog/books_imported.html',{'count':count})
