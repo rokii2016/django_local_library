@@ -74,6 +74,8 @@ class Book(models.Model):
 
 
     display_authors.short_description = 'Authors'
+    class Meta:
+        ordering = ['title']
 import uuid # Required for unique book instances
 from django.contrib.auth.decorators import permission_required
 
