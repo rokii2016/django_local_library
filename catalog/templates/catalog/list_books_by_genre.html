@@ -8,7 +8,7 @@
   <ul>
     {% for book in page_obj %}
       <li>
-        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}} )
+        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author.all|join:";" }} )
       </li>
     {% endfor %}
   </ul>
