@@ -9,6 +9,9 @@ class Genre(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return self.name
+    class Meta:
+        ordering = ['name']
+        
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 class Language(models.Model):
     """Model representing a Language (e.g. English, French, Japanese, etc.)"""
