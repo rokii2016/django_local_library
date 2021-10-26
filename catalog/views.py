@@ -299,6 +299,7 @@ def import_books(request):
         if len(book) == 0: #no book with that title
             book= Book()
             book.title = row[0]
+            book.isbn = row[4]
             book.save()
             s_authors=row[1].split(';')
             print(s_authors)
@@ -330,7 +331,6 @@ def import_books(request):
                     genre = Genre(name=agenre)
                     genre.save()
                     book.genre.add(genre)
-            book.isbn = row[4]
             print('isbn: ',row[4],"length: ",len(row[4]),"book.isbn: ",book.isbn)
             found = False
             for lang in Language.objects.all():
