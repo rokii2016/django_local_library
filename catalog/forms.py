@@ -4,7 +4,7 @@ from django import forms
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from .models import Genre,Book,BookInstance
+from .models import Genre,Book,BookInstance,Author
 
 class RenewBookForm(forms.Form):
     renewal_date = forms.DateField(help_text="Enter a date between now and 4 weeks (default 3).")
@@ -29,6 +29,22 @@ class GenreForm(forms.Form):
     for a_genre in genres:
         CHOICES.append((a_genre,a_genre))
     choice = forms.ChoiceField(choices=CHOICES)
+class BookSearchForm(forms.Form):
+    
+    CHOICES =[('Genre','Genre'),('Title','Title'),('Author','Author')]
+    choice = forms.ChoiceField(choices=CHOICES)
+    title_search = forms.CharField(required=False,initial=" ")
+    
+    genres = Genre.objects.all()
+    CHOICES1 =[]
+    for a_genre in genres:
+        CHOICES1.append((a_genre.name,a_genre.name))
+    genre = forms.ChoiceField(choices=CHOICES1)
+    authors = Author.objects.all()
+    CHOICES2 =[]
+    for a_author in authors:
+        CHOICES2.append((a_author,a_author))
+    author = forms.ChoiceField(choices=CHOICES2)
 class BookForm(forms.Form):
     
     books = Book.objects.all()

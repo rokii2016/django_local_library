@@ -21,7 +21,7 @@
 	  <li><a href="{% url 'books' %}">All books</a></li>
 	  <li><a href="{% url 'authors' %}">All authors</a></li>        
 	  <!--<li><a href="{% url 'books-genre' %}">Genres</a></li> -->        
-	  <li><a href="{% url 'books-by-genre' %}">Books By Genres</a></li>        </ul>
+	  <li><a href="{% url 'search-books' %}">Search Books </a></li>        </ul>
 	{% if user.is_authenticated %}
         <ul class="sidebar-nav">
       <li>User: {{ user.get_username }}</li>

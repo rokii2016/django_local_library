@@ -146,7 +146,7 @@ class BookGenreListView(generic.ListView):
     model = Genre
     #template_name ='catalog/genre_list.html'
     paginate_by = 4
-from .forms import GenreForm
+from .forms import GenreForm,BookSearchForm
 
 from django.core.paginator import Paginator
 def show_books_by_genre(request,genre):
@@ -175,6 +175,7 @@ def get_genre(request):
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             genre = request.POST['choice']
             print("Genre is ",genre)
+            
             context ={
                 'genre':genre,
                 'book_list':Book.objects.all(),
@@ -344,3 +345,64 @@ def import_books(request):
             book.save()
             count +=1
     return render(request,'catalog/books_imported.html',{'count':count})
+def search_books(request):
+    """View function for renewing a specific BookInstance by librarian."""
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = BookSearchForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            choice = request.POST['choice']
+            title_search = request.POST['title_search']
+            thegenre= request.POST['genre']
+            author = request.POST['author']
+            print("choice: ",choice," title_search: ",title_search," thegenre: ",thegenre," author: ",author)
+                
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('search-results',args=[choice,title_search,thegenre,author] ) )
+            #return HttpResponseRedirect(reverse('search-results',kwargs={'choice':choice,'search':search,'thegenre':thegenre,'author':author} ) )
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = BookSearchForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request,'catalog/search_books.html',context)
+
+    return render(request, 'catalog/search_books.html', context)
+def search_results(request,choice,title_search,thegenre,author):
+    print ("choice: '",choice,"' title_search: '",title_search,'\' thegenre: \'',thegenre,"' author: '",author,"'")
+    if choice.find('Genre') >= 0:
+        book_list = Book.objects.filter(genre__name=thegenre)
+    elif choice.find('Title') >= 0:
+        book_list =[]
+        title_search=title_search.strip()
+        for book in Book.objects.all():
+            if book.title.find(title_search) >= 0:
+                book_list.append(book)
+    elif choice.find('Author') >= 0:
+        fields = author.split(',')
+        fields[1] = fields[1].strip()
+        book_list = Book.objects.filter(author__last_name=fields[0]).filter(author__first_name=fields[1])
+    paginator = Paginator(book_list, 4) # Show 4 bookss per page.
+    print ('total ',paginator.count)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context ={
+        'book_list':book_list,
+        'size': len(book_list),
+        'page_obj':page_obj
+        }
+    for book in book_list:
+        print(book.title)
+    # redirect to a new URL:
+    return render(request,'catalog/found_books.html',context)
+    

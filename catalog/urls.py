@@ -51,3 +51,9 @@ urlpatterns += [
 urlpatterns += [
     path('book/importbooks',views.import_books,name='import-books'),
 ]
+urlpatterns += [
+    path('book/searchbooks',views.search_books,name='search-books'),
+]
+urlpatterns += [
+    path('book/<str:choice>/<str:title_search>/<str:thegenre>/<str:author>/searchresults',views.search_results,name='search-results'),
+]
