@@ -2,6 +2,15 @@
 
 {% block content %}
   <h1>Found {{ size }} Books</h1>
+  {% if choice  == 'Title' %}
+  <h2> That contain '{{ title_search }}' </h2>
+    {% endif %}
+  {% if choice  == 'Genre' %}
+  <h2> For Genre '{{ thegenre }}' </h2>
+    {% endif %}
+  {% if choice  == 'Author' %}
+  <h2> For Author '{{ theauthor }}' </h2>
+    {% endif %}
   <div class="books-by-genre">
   {% if page_obj %}
   <ul>

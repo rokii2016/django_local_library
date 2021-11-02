@@ -378,6 +378,7 @@ def search_books(request):
 
     return render(request, 'catalog/search_books.html', context)
 def search_results(request,choice,title_search,thegenre,author):
+    theauthor=""
     print ("choice: '",choice,"' title_search: '",title_search,'\' thegenre: \'',thegenre,"' author: '",author,"'")
     if choice.find('Genre') >= 0:
         book_list = Book.objects.filter(genre__name=thegenre)
@@ -390,7 +391,14 @@ def search_results(request,choice,title_search,thegenre,author):
     elif choice.find('Author') >= 0:
         fields = author.split(',')
         fields[1] = fields[1].strip()
-        book_list = Book.objects.filter(author__last_name=fields[0]).filter(author__first_name=fields[1])
+        book_list=[]
+        for book in Book.objects.all():
+            for author in book.author.all():
+                if author.first_name.find(fields[1]) >=0 and author.last_name.find(fields[0]) >= 0:
+                    theauthor = author.first_name.strip()+" "+author.last_name
+                    book_list.append(book)
+                    
+        #book_list = Book.objects.filter(author__last_name=fields[0]).filter(author__first_name=fields[1])
     paginator = Paginator(book_list, 4) # Show 4 bookss per page.
     print ('total ',paginator.count)
 
@@ -398,6 +406,10 @@ def search_results(request,choice,title_search,thegenre,author):
     page_obj = paginator.get_page(page_number)
     context ={
         'book_list':book_list,
+        'choice':choice,
+        'title_search':title_search,
+        'thegenre':thegenre,
+        'theauthor':theauthor,
         'size': len(book_list),
         'page_obj':page_obj
         }
